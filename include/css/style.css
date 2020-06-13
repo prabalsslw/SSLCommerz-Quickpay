@@ -10,19 +10,23 @@
 .sslcom-text-field{
 	height: 39px;
 	width: 100%;
+	font-size: 13px;
 }
 .sslcom-text-area{
 	width: 100%;
+	font-size: 13px;
 }
 .sslcom-amount-field{
 	height: 39px;
 	width: 60%;
+	font-size: 13px;
 }
 .sslcom-currency-field
 {
 	height: 39px;
 	width: 38%;
 	margin-left: 1%;
+	font-size: 13px;
 }
 .sslc-inline p {
 	display: inline-block;
