@@ -14,6 +14,28 @@
 .sslcom-text-area{
 	width: 100%;
 }
+.sslcom-amount-field{
+	height: 39px;
+	width: 60%;
+}
+.sslcom-currency-field
+{
+	height: 39px;
+	width: 38%;
+	margin-left: 1%;
+}
+.sslc-inline p {
+	display: inline-block;
+    vertical-align: top;
+}
+.half-email{
+	width: 55%;
+}
+.half-phone{
+	width: 43%;
+	margin-left: 1%;
+}
+
 
 @media only screen and (max-width: 850px) {
 	.sslcommerz-quickpay{
@@ -26,8 +48,29 @@
 		height: 39px;
 		width: 100%;
 	}
-	
+
 	.sslcom-text-area{
 		width: 100%;
+	}
+	.sslcom-amount-field{
+		height: 39px;
+		width: 100%;
+	}
+	.sslcom-currency-field
+	{
+		height: 39px;
+		width: 100%;
+		margin-top: 4%;
+		margin-left: 0%;
+	}
+
+	.half-email{
+		width: 100%;
+	}
+	.half-phone{
+		width: 100%;
+		margin-left: 1%;
+		/*margin-top: 4%;*/
+		margin-left: 0%;
 	}
 }
