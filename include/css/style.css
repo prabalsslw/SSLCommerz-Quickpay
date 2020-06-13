@@ -1,0 +1,33 @@
+.sslcommerz-quickpay{
+	margin: auto;
+  	width: 70%;
+  	padding: 10px;
+}
+.sslcom-required{
+	font-size: 13px;
+	color: red;
+}
+.sslcom-text-field{
+	height: 39px;
+	width: 100%;
+}
+.sslcom-text-area{
+	width: 100%;
+}
+
+@media only screen and (max-width: 850px) {
+	.sslcommerz-quickpay{
+		margin: auto;
+	  	width: 100%;
+	  	padding: 10px;
+	}
+
+	.sslcom-text-field{
+		height: 39px;
+		width: 100%;
+	}
+	
+	.sslcom-text-area{
+		width: 100%;
+	}
+}
