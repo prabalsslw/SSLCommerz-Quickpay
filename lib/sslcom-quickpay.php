@@ -224,7 +224,7 @@
   		<h3>General Information</h3><hr>
 	    <p>
 	    	<label for="name">Full Name: <span class="sslcom-required">*</span> </label><br>
-	    	<input type="text" id="sslcom_fullname" class="sslcom-text-field" name="sslcom_fullname" placeholder="Type Your Full Name" required >
+	    	<input type="text" id="sslcom_fullname" class="sslcom-text-field" name="sslcom_fullname" placeholder="Type Your Full Name" required autofocus>
 	    	<input type="hidden" name="token" value="Initiate">
 	    </p>
 	    <div class="sslc-inline">
@@ -295,6 +295,10 @@
 	    	<label for="name">Note: </label><br>
 	    	<textarea name="sslcom_note" id="sslcom_note" rows="2" class="sslcom-text-area" placeholder="Type Your Note, If Have Any" ></textarea>
 	    </p>
+	    <p>
+	    	<div id="errorMsg"></div>
+	    </p>
+	    
 	    <?php 
 	    	if(isset($quickpay_options['enable_popup']) && $quickpay_options['enable_popup'] != "")
 	    	{
@@ -357,6 +361,46 @@
         if(sslcom_fullname !='' && sslcom_email !='' && sslcom_phone !='' && sslcom_address !='' && sslcom_service !='' && sslcom_amount !='' && sslcom_currency !='') 
         {
             var obj = {  "sslcom_fullname": sslcom_fullname, "sslcom_email": sslcom_email, "sslcom_phone": sslcom_phone, "sslcom_address": sslcom_address, "extra_f1": extra_f1, "extra_f2": extra_f2, "sslcom_service": sslcom_service, "sslcom_amount": sslcom_amount, "sslcom_currency": sslcom_currency, "sslcom_note": sslcom_note };
+            document.getElementById("errorMsg").innerHTML = "Ok Now";
+        }
+        else
+        {
+        	if(sslcom_fullname == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "<span>Please Enter Full Name!</span>";
+        	}
+        	else if(sslcom_email == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "Please Enter Email Address!";
+        	}
+        	else if(sslcom_phone == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "Please Enter Phone Number!";
+        	}
+        	else if(sslcom_address == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "Please Enter Address!";
+        	}
+        	else if(typeof(document.getElementById("extra_f1")) != 'undefined' && document.getElementById("extra_f1") != null && document.getElementById("extra_f1").value == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "Please Enter Extra Field 1!";
+        	}
+        	else if(typeof(document.getElementById("extra_f2")) != 'undefined' && document.getElementById("extra_f2") != null && document.getElementById("extra_f2").value == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "Please Enter Extra Field 2!";
+        	}
+        	else if(sslcom_service == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "Please Select One Package/Service/Product!";
+        	}
+        	else if(sslcom_amount == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "Please Enter Amount More Than 10 TK!";
+        	}
+        	else if(sslcom_currency == '')
+        	{
+        		document.getElementById("errorMsg").innerHTML = "Please Select Currency!";
+        	}
         }
 
         var x = document.getElementById("sslczPayBtn").getAttribute("postdata").value = obj;
