@@ -7,6 +7,15 @@
 	$table_name = $wpdb->prefix . 'sslcom_quickpay_payment';
 	$quickpay_options = get_option( 'sslcom_quickpay' );
 
+	if(isset($quickpay_options['enable_sandbox']) && $quickpay_options['enable_sandbox'] != ""){
+		$js_api_url 	= "https://sandbox.sslcommerz.com/embed.min.js";
+		$sandbox 		= "yes";
+	}
+	else{
+		$js_api_url 	= "https://seamless-epay.sslcommerz.com/embed.min.js";
+		$sandbox 		= "no";
+	}
+
 	if(isset($_POST['status']) && $_POST['status'] == "VALID")
 	{
 		if((isset($_POST['tran_id']) && $_POST['tran_id'] != "") && (isset($_POST['val_id']) && $_POST['val_id'] != "") && (isset($_POST['amount']) && $_POST['amount'] != ""))
@@ -215,29 +224,29 @@
   		<h3>General Information</h3><hr>
 	    <p>
 	    	<label for="name">Full Name: <span class="sslcom-required">*</span> </label><br>
-	    	<input type="text" class="sslcom-text-field" name="sslcom_fullname" placeholder="Type Your Full Name" required >
+	    	<input type="text" id="sslcom_fullname" class="sslcom-text-field" name="sslcom_fullname" placeholder="Type Your Full Name" required >
 	    	<input type="hidden" name="token" value="Initiate">
 	    </p>
 	    <div class="sslc-inline">
 		    <p class="half-email">
 		    	<label for="name">Email: <span class="sslcom-required">*</span> </label><br>
-		    	<input type="email" class="sslcom-text-field" name="sslcom_email" placeholder="Type Your Email Address" required >
+		    	<input type="email" id="sslcom_email" class="sslcom-text-field" name="sslcom_email" placeholder="Type Your Email Address" required >
 		    </p>
 		    <p class="half-phone">
 		    	<label for="name">Phone Number: <span class="sslcom-required">*</span> </label><br>
-		    	<input type="text" class="sslcom-text-field" name="sslcom_phone" placeholder="Type Your Phone Number" required >
+		    	<input type="text" id="sslcom_phone" class="sslcom-text-field" name="sslcom_phone" placeholder="Type Your Phone Number" required >
 		    </p>
 		</div>
 	    <p>
 	    	<label for="name">Address: <span class="sslcom-required">*</span> </label><br>
-	    	<textarea name="sslcom_address" rows="2" class="sslcom-text-area" placeholder="Type Your Full Address" required ></textarea>
+	    	<textarea name="sslcom_address" id="sslcom_address" rows="2" class="sslcom-text-area" placeholder="Type Your Full Address" required ></textarea>
 	    </p>
 	    <?php
 	    	if(isset($quickpay_options['enable_extra_f1']) && $quickpay_options['enable_extra_f1'] == 1)
 	    	{ ?>
 	    		<p>
 			    	<label for="name"><?php if($quickpay_options['enable_extra_f1'] == 1) {echo $quickpay_options['extra_f1']; } ?>: <span class="sslcom-required">*</span> </label><br>
-			    	<input type="text" class="sslcom-text-field" name="extra_f1" placeholder="Type Your <?php if($quickpay_options['enable_extra_f1'] == 1) {echo $quickpay_options['extra_f1']; } ?>" required >
+			    	<input type="text" id="extra_f1" class="sslcom-text-field" name="extra_f1" placeholder="Type Your <?php if($quickpay_options['enable_extra_f1'] == 1) {echo $quickpay_options['extra_f1']; } ?>" required >
 			    </p>
 	    <?php 
 	    	}
@@ -247,7 +256,7 @@
 	    	{ ?>
 	    		<p>
 			    	<label for="name"><?php if($quickpay_options['enable_extra_f2'] == 1) {echo $quickpay_options['extra_f2']; } ?>: <span class="sslcom-required">*</span> </label><br>
-			    	<input type="text" class="sslcom-text-field" name="extra_f2" placeholder="Type Your <?php if($quickpay_options['enable_extra_f2'] == 1) {echo $quickpay_options['extra_f2']; } ?>" required >
+			    	<input type="text" id="extra_f2" class="sslcom-text-field" name="extra_f2" placeholder="Type Your <?php if($quickpay_options['enable_extra_f2'] == 1) {echo $quickpay_options['extra_f2']; } ?>" required >
 			    </p>
 	    <?php 
 	    	}
@@ -255,7 +264,7 @@
 	    <h3>Payment Information</h3><hr>
 	    <p>
 	    	<label for="name">Package/Service/Product <span class="sslcom-required">*</span> </label><br>
-	    	<select name="sslcom_service" class="sslcom-text-field" required>
+	    	<select name="sslcom_service" id="sslcom_service" class="sslcom-text-field" required>
 	    		<option value="">Select Package/Service/Product</option>
 	    		<?php
 	    			$sslcom_package = explode(",", $quickpay_options['package_name']);
@@ -268,11 +277,11 @@
 	    <div class="sslc-inline">
 		    <p class="half-email">
 		    	<label for="name">Amount <span class="sslcom-required">*</span> </label><br>
-		    	<input type="number" class="sslcom-text-field" name="sslcom_amount" placeholder=" Type Amount" min="10" required >
+		    	<input type="number" id="sslcom_amount" class="sslcom-text-field" name="sslcom_amount" placeholder=" Type Amount" min="10" required >
 		    </p>
 		    <p class="half-phone">
 		    	<label for="name">Currency <span class="sslcom-required">*</span> </label><br>
-		    	<select name="sslcom_currency" class="sslcom-text-field" required>
+		    	<select name="sslcom_currency" id="sslcom_currency" class="sslcom-text-field" required>
 		    		<option value="BDT" selected>BDT</option>
 					<option value="EUR">EUR</option>
 					<option value="GBP">GBP</option>
@@ -284,10 +293,89 @@
 		</div>
 	    <p>
 	    	<label for="name">Note: </label><br>
-	    	<textarea name="sslcom_note" rows="2" class="sslcom-text-area" placeholder="Type Your Note, If Have Any" ></textarea>
+	    	<textarea name="sslcom_note" id="sslcom_note" rows="2" class="sslcom-text-area" placeholder="Type Your Note, If Have Any" ></textarea>
 	    </p>
+	    <?php 
+	    	if(isset($quickpay_options['enable_popup']) && $quickpay_options['enable_popup'] != "")
+	    	{
+	    		$Sslcommerz_Quickpay_Api = new Sslcommerz_Quickpay_Api;
+				$tran_id = $Sslcommerz_Quickpay_Api->sslcommerQuickpayTranidGen();
+	    ?>
+	    		<button class="your-button-class" id="sslczPayBtn"
+					token="<?php echo $tran_id; ?>"
+					postdata=""
+					order="<?php echo $tran_id; ?>"
+					endpoint="<?php echo get_site_url(); ?>/sslcommerzQuickpay.php?sslcomcheckout"> Proceed to Pay
+				</button>
+	   	<?php
+	    	}else{
+	    ?>
 	    <p><input type="submit"></p>
+	    <?php
+	    	}
+	    ?>
   	</form>
 </div>
 <?php } 
 ?>
+
+<script type="text/javascript">
+	(function (window, document) {
+		var loader = function () {
+		    var script = document.createElement("script"), tag = document.getElementsByTagName("script")[0];
+		    script.src = "<?php echo $js_api_url; ?>?" + Math.random().toString(36).substring(7);
+		    tag.parentNode.insertBefore(script, tag);
+		};
+
+		window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+	})(window, document);
+	
+	function changeObj() {
+        var obj = {};
+
+        var sslcom_fullname = document.getElementById("sslcom_fullname").value;
+        var sslcom_email = document.getElementById("sslcom_email").value;
+        var sslcom_phone = document.getElementById("sslcom_phone").value;
+        var sslcom_address = document.getElementById("sslcom_address").value;
+
+        if(typeof(document.getElementById("extra_f1")) != 'undefined' && document.getElementById("extra_f1") != null){
+        	var extra_f1 = document.getElementById("extra_f1").value;
+    	} else{
+    		extra_f1 = '';
+    	}
+    	if(typeof(document.getElementById("extra_f2")) != 'undefined' && document.getElementById("extra_f2") != null){
+        	var extra_f2 = document.getElementById("extra_f2").value;
+    	} else{
+    		extra_f2 = '';
+    	}
+        
+        var sslcom_service = document.getElementById("sslcom_service").value;
+        var sslcom_amount = document.getElementById("sslcom_amount").value;
+        var sslcom_currency = document.getElementById("sslcom_currency").value;
+        var sslcom_note = document.getElementById("sslcom_note").value;
+
+        if(sslcom_fullname !='' && sslcom_email !='' && sslcom_phone !='' && sslcom_address !='' && sslcom_service !='' && sslcom_amount !='' && sslcom_currency !='') 
+        {
+            var obj = {  "sslcom_fullname": sslcom_fullname, "sslcom_email": sslcom_email, "sslcom_phone": sslcom_phone, "sslcom_address": sslcom_address, "extra_f1": extra_f1, "extra_f2": extra_f2, "sslcom_service": sslcom_service, "sslcom_amount": sslcom_amount, "sslcom_currency": sslcom_currency, "sslcom_note": sslcom_note };
+        }
+
+        var x = document.getElementById("sslczPayBtn").getAttribute("postdata").value = obj;
+        console.log(x);
+    }
+    changeObj();
+	document.getElementById("sslcom_fullname").onchange = function() {changeObj()};
+	document.getElementById("sslcom_email").onchange = function() {changeObj()};
+	document.getElementById("sslcom_phone").onchange = function() {changeObj()};
+	document.getElementById("sslcom_address").onchange = function() {changeObj()};
+	if(typeof(document.getElementById("extra_f1")) != 'undefined' && document.getElementById("extra_f1") != null){
+    	document.getElementById("extra_f1").onchange = function() {changeObj()};
+	}
+	if(typeof(document.getElementById("extra_f2")) != 'undefined' && document.getElementById("extra_f2") != null){
+    	document.getElementById("extra_f2").onchange = function() {changeObj()};
+	}
+	document.getElementById("sslcom_service").onchange = function() {changeObj()};
+	document.getElementById("sslcom_amount").onchange = function() {changeObj()};
+    document.getElementById("sslcom_currency").onchange = function() {changeObj()};
+	document.getElementById("sslcom_note").onchange = function() {changeObj()};
+    
+</script>

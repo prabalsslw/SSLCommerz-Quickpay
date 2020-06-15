@@ -12,15 +12,25 @@
 * License: GPL2
 **/
 
+/**
+ * Fired during plugin activation.
+ *
+ * This class defines all code necessary to run during the plugin's activation.
+ *
+ * @since      1.0.0
+ * @package    SSLCommerz_Woocommerce
+ * @author     Prabal Mallick <prabalsslw@gmail.com>
+ */
+
 	defined( 'ABSPATH' ) or die(); // Protect from alien invasion
 
 	define( 'SSLCDPATH', plugin_dir_path( __FILE__ ) );
 	define( 'SSLCDURL', plugin_dir_url( __FILE__ ) );
 
-	global $sslcom_quickpay_version;
 	global $sslcom_quickpay_slug;
 
-	$sslcom_quickpay_version = '1.0';
+	define( 'SSLCOMMERZ_QUICKPAY_VERSION', '1.0.0' );
+
 	$sslcom_quickpay_slug = 'sslcom_quickpay';
 	$quickpay_options = get_option( 'sslcom_quickpay' );
 
@@ -38,13 +48,17 @@
 
 	function sslcom_quickpay_active() {
 		Quickpay_Init::sslcom_quickpay_install();
+
+		$installed_version = get_option( "sslcommerz_easy_version" );
+		if ( $installed_version == SSLCOMMERZ_QUICKPAY_VERSION ) {
+			return true;
+		}
+		update_option( 'sslcommerz_quickpay_version', SSLCOMMERZ_QUICKPAY_VERSION );
 	}
 
 	if(isset($quickpay_options['enable_quickpay']) && !empty($quickpay_options['enable_quickpay']))
 	{
-		add_action('plugins_loaded', array(Sslcom_Success_Url::get_instance(), 'setup'));
-		add_action('plugins_loaded', array(Sslcom_Fail_Url::get_instance(), 'setup'));
-		add_action('plugins_loaded', array(Sslcom_Cancel_Url::get_instance(), 'setup'));
+		add_action('plugins_loaded', array(Sslcom_Checkout_Url::get_instance(), 'setup'));
 		add_action('plugins_loaded', array(Sslcom_Ipn_Url::get_instance(), 'setup'));
 		add_shortcode('SSLCOMMERZ_QUICKPAY', 'make_sslcommerz_quickpay_shortcode');
 	}
@@ -56,7 +70,7 @@
 	
 	# Load Plugin CSS
 	function sslcommerz_quickpay_load_custom_style() {
-        wp_register_style( 'sslcommerz_quickpay', SSLCDURL . 'include/css/style.css', false, '1.0.0' );
+        wp_register_style( 'sslcommerz_quickpay', SSLCDURL . 'include/css/style.css', false, SSLCOMMERZ_QUICKPAY_VERSION );
         wp_enqueue_style( 'sslcommerz_quickpay' );
 	}
 
