@@ -7,15 +7,6 @@
 	$table_name = $wpdb->prefix . 'sslcom_quickpay_payment';
 	$quickpay_options = get_option( 'sslcom_quickpay' );
 
-	if(isset($quickpay_options['enable_sandbox']) && $quickpay_options['enable_sandbox'] != ""){
-		$js_api_url 	= "https://sandbox.sslcommerz.com/embed.min.js";
-		$sandbox 		= "yes";
-	}
-	else{
-		$js_api_url 	= "https://seamless-epay.sslcommerz.com/embed.min.js";
-		$sandbox 		= "no";
-	}
-
 	if(isset($_POST['status']) && $_POST['status'] == "VALID")
 	{
 		if((isset($_POST['tran_id']) && $_POST['tran_id'] != "") && (isset($_POST['val_id']) && $_POST['val_id'] != "") && (isset($_POST['amount']) && $_POST['amount'] != ""))
@@ -295,131 +286,29 @@
 	    	<label for="name">Note: </label><br>
 	    	<textarea name="sslcom_note" id="sslcom_note" rows="2" class="sslcom-text-area" placeholder="Type Your Note, If Have Any" ></textarea>
 	    </p>
+	    <h3>Payment Method</h3><hr>
 	    <p>
-	    	<div id="errorMsg"></div>
+			<div class="paymentclass">
+				<label>
+					<img class="imgclass" src="<?php echo SSLCDURL.'/images/SSLCommerz.png'; ?>">
+					<h5 class="pyment-radio"><input type="radio" checked="checked" value="sslcommerz" name="payment-mode">
+						<?php echo '&nbsp;' . $quickpay_options['sslcom_title']; ?>
+					</h5><hr>
+					<p><?php echo $quickpay_options['sslcom_description']; ?></p>
+				</label>
+			</div>
 	    </p>
-	    
-	    <?php 
-	    	if(isset($quickpay_options['enable_popup']) && $quickpay_options['enable_popup'] != "")
-	    	{
-	    		$Sslcommerz_Quickpay_Api = new Sslcommerz_Quickpay_Api;
-				$tran_id = $Sslcommerz_Quickpay_Api->sslcommerQuickpayTranidGen();
-	    ?>
-	    		<button class="your-button-class" id="sslczPayBtn"
-					token="<?php echo $tran_id; ?>"
-					postdata=""
-					order="<?php echo $tran_id; ?>"
-					endpoint="<?php echo get_site_url(); ?>/sslcommerzQuickpay.php?sslcomcheckout"> Proceed to Pay
-				</button>
-	   	<?php
-	    	}else{
-	    ?>
-	    <p><input type="submit"></p>
-	    <?php
-	    	}
-	    ?>
+	    <p>
+	    	<label for="checkbox">
+	    		<input type="checkbox" id="terms_cond" name="terms" required > By clicking Proceed, you agreed to our <a href="#" target="new">Terms &amp; Condition</a>, <a href="#" target="new">Privacy Policy</a> and <a href="#" target="new">Return Policy</a>
+	    	</label>
+	    </p>
+	    <p>
+	    	<input class="paybtn" type="submit" value="Proceed To Pay">
+	    </p>
+
   	</form>
 </div>
 <?php } 
 ?>
 
-<script type="text/javascript">
-	(function (window, document) {
-		var loader = function () {
-		    var script = document.createElement("script"), tag = document.getElementsByTagName("script")[0];
-		    script.src = "<?php echo $js_api_url; ?>?" + Math.random().toString(36).substring(7);
-		    tag.parentNode.insertBefore(script, tag);
-		};
-
-		window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
-	})(window, document);
-	
-	function changeObj() {
-        var obj = {};
-
-        var sslcom_fullname = document.getElementById("sslcom_fullname").value;
-        var sslcom_email = document.getElementById("sslcom_email").value;
-        var sslcom_phone = document.getElementById("sslcom_phone").value;
-        var sslcom_address = document.getElementById("sslcom_address").value;
-
-        if(typeof(document.getElementById("extra_f1")) != 'undefined' && document.getElementById("extra_f1") != null){
-        	var extra_f1 = document.getElementById("extra_f1").value;
-    	} else{
-    		extra_f1 = '';
-    	}
-    	if(typeof(document.getElementById("extra_f2")) != 'undefined' && document.getElementById("extra_f2") != null){
-        	var extra_f2 = document.getElementById("extra_f2").value;
-    	} else{
-    		extra_f2 = '';
-    	}
-        
-        var sslcom_service = document.getElementById("sslcom_service").value;
-        var sslcom_amount = document.getElementById("sslcom_amount").value;
-        var sslcom_currency = document.getElementById("sslcom_currency").value;
-        var sslcom_note = document.getElementById("sslcom_note").value;
-
-        if(sslcom_fullname !='' && sslcom_email !='' && sslcom_phone !='' && sslcom_address !='' && sslcom_service !='' && sslcom_amount !='' && sslcom_currency !='') 
-        {
-            var obj = {  "sslcom_fullname": sslcom_fullname, "sslcom_email": sslcom_email, "sslcom_phone": sslcom_phone, "sslcom_address": sslcom_address, "extra_f1": extra_f1, "extra_f2": extra_f2, "sslcom_service": sslcom_service, "sslcom_amount": sslcom_amount, "sslcom_currency": sslcom_currency, "sslcom_note": sslcom_note };
-            document.getElementById("errorMsg").innerHTML = "Ok Now";
-        }
-        else
-        {
-        	if(sslcom_fullname == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "<span>Please Enter Full Name!</span>";
-        	}
-        	else if(sslcom_email == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "Please Enter Email Address!";
-        	}
-        	else if(sslcom_phone == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "Please Enter Phone Number!";
-        	}
-        	else if(sslcom_address == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "Please Enter Address!";
-        	}
-        	else if(typeof(document.getElementById("extra_f1")) != 'undefined' && document.getElementById("extra_f1") != null && document.getElementById("extra_f1").value == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "Please Enter Extra Field 1!";
-        	}
-        	else if(typeof(document.getElementById("extra_f2")) != 'undefined' && document.getElementById("extra_f2") != null && document.getElementById("extra_f2").value == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "Please Enter Extra Field 2!";
-        	}
-        	else if(sslcom_service == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "Please Select One Package/Service/Product!";
-        	}
-        	else if(sslcom_amount == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "Please Enter Amount More Than 10 TK!";
-        	}
-        	else if(sslcom_currency == '')
-        	{
-        		document.getElementById("errorMsg").innerHTML = "Please Select Currency!";
-        	}
-        }
-
-        var x = document.getElementById("sslczPayBtn").getAttribute("postdata").value = obj;
-        console.log(x);
-    }
-    changeObj();
-	document.getElementById("sslcom_fullname").onchange = function() {changeObj()};
-	document.getElementById("sslcom_email").onchange = function() {changeObj()};
-	document.getElementById("sslcom_phone").onchange = function() {changeObj()};
-	document.getElementById("sslcom_address").onchange = function() {changeObj()};
-	if(typeof(document.getElementById("extra_f1")) != 'undefined' && document.getElementById("extra_f1") != null){
-    	document.getElementById("extra_f1").onchange = function() {changeObj()};
-	}
-	if(typeof(document.getElementById("extra_f2")) != 'undefined' && document.getElementById("extra_f2") != null){
-    	document.getElementById("extra_f2").onchange = function() {changeObj()};
-	}
-	document.getElementById("sslcom_service").onchange = function() {changeObj()};
-	document.getElementById("sslcom_amount").onchange = function() {changeObj()};
-    document.getElementById("sslcom_currency").onchange = function() {changeObj()};
-	document.getElementById("sslcom_note").onchange = function() {changeObj()};
-    
-</script>

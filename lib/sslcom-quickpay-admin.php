@@ -99,14 +99,6 @@ class Quickpay_Admin_Settings
 	    );
 
 	    add_settings_field(
-	        'enable_popup',
-	        __('Enable Easy Popup', $sslcom_quickpay_slug),
-	        array( $this, 'easycheckout_popup_callback'),
-	        'sslcom_quickpay',
-	        'gateway_settings_section'
-	    );
-
-	    add_settings_field(
 	        'storeid',
 	        __('Sandbox/Live Store ID', $sslcom_quickpay_slug),
 	        array( $this, 'sslcom_storeid_callback'),
@@ -233,20 +225,6 @@ class Quickpay_Admin_Settings
 
 	    $html = '<input type="checkbox" id="enable_sandbox" name="sslcom_quickpay[enable_sandbox]" value="1"' . checked( 1, $enable_sandbox, false ) . '/>';
 	    $html .= '<label for="checkbox_example">Check to enable Sandbox/Test Mode.</label>';
-
-	    echo $html;
-	}
-
-	public function easycheckout_popup_callback() {
-	    $options = get_option( 'sslcom_quickpay' );
-
-	    $enable_popup = get_option('enable_popup');
-	    if( isset( $options['enable_popup'] ) && $options['enable_popup'] != '' ) {
-	        $enable_popup = $options['enable_popup'];
-	    }
-
-	    $html = '<input type="checkbox" id="enable_popup" name="sslcom_quickpay[enable_popup]" value="1"' . checked( 1, $enable_popup, false ) . '/>';
-	    $html .= '<label for="checkbox_example">Check to enable Easy Popup.</label>';
 
 	    echo $html;
 	}
@@ -421,14 +399,6 @@ class Quickpay_Admin_Settings
 	            $output['enable_sandbox'] =  $input['enable_sandbox'] ;
 	        } else {
 	            add_settings_error( 'sslcom_quickpay', 'plugin-error', esc_html__( 'Enable sandbox', $sslcom_quickpay_slug));
-	        }
-	    }
-
-	    if ( isset( $input['enable_popup'] ) ) {
-	        if (  $input['enable_popup']  ) {
-	            $output['enable_popup'] =  $input['enable_popup'] ;
-	        } else {
-	            add_settings_error( 'sslcom_quickpay', 'plugin-error', esc_html__( 'Enable popup', $sslcom_quickpay_slug));
 	        }
 	    }
 

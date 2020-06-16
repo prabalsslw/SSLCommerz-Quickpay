@@ -39,8 +39,39 @@
 	width: 43%;
 	margin-left: 1%;
 }
-
-
+.field-validation{
+	border: 1px dotted red;
+	padding: 4px;
+	color: red;
+	font-weight: bold;
+}
+.validation-ok{
+	border: 1px dotted green;
+	padding: 4px;
+	color: green;
+	font-weight: bold;
+}
+.paymentclass{
+	border: 1px solid #40004c; 
+	padding: 10px; 
+	border-radius: 1px;
+	box-shadow: 1px 2px 10px lavender;
+}
+.pyment-radio{
+	font-size: 16px;
+	font-weight: bold;
+}
+.imgclass:hover{
+	transform: scale(1.05);
+}
+.imgclass {
+  transition: transform .5s ease;
+  padding: 1px;
+}
+.paybtn{
+	width: 100%;
+	border: 0px;
+}
 @media only screen and (max-width: 900px) {
 	.sslcommerz-quickpay{
 		margin: auto;

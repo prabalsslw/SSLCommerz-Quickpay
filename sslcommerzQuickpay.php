@@ -49,7 +49,7 @@
 	function sslcom_quickpay_active() {
 		Quickpay_Init::sslcom_quickpay_install();
 
-		$installed_version = get_option( "sslcommerz_easy_version" );
+		$installed_version = get_option( "sslcommerz_quickpay_version" );
 		if ( $installed_version == SSLCOMMERZ_QUICKPAY_VERSION ) {
 			return true;
 		}
@@ -58,7 +58,6 @@
 
 	if(isset($quickpay_options['enable_quickpay']) && !empty($quickpay_options['enable_quickpay']))
 	{
-		add_action('plugins_loaded', array(Sslcom_Checkout_Url::get_instance(), 'setup'));
 		add_action('plugins_loaded', array(Sslcom_Ipn_Url::get_instance(), 'setup'));
 		add_shortcode('SSLCOMMERZ_QUICKPAY', 'make_sslcommerz_quickpay_shortcode');
 	}

@@ -30,11 +30,6 @@ class Sslcommerz_Quickpay_Api
 		return array('status' => $response['status'], 'GatewayPageURL' => $response['GatewayPageURL'], 'sessionkey' => $response['sessionkey']);
 	}
 
-	public function EasyPopupRequest()
-	{
-		
-	}
-
 	public function SslcomValidatePayment($val_id)
 	{
 		$validation_req_url = $this->validation_url."?val_id=" . $val_id . "&store_id=" . $this->quickpay_options['storeid'] . "&store_passwd=" . $this->quickpay_options['storepassword'] . "&v=1&format=json";
@@ -81,69 +76,27 @@ class Sslcommerz_Quickpay_Api
 		    )
 		);
 
-		if(empty($this->quickpay_options['enable_popup']))
+		
+		if($response['response']['code'] == 200)
 		{
-			if($response['response']['code'] == 200)
-			{
-				$sslcz = json_decode($response['body'], true);
-				if ($sslcz['status'] == 'FAILED') {
-	                return "FAILED TO CONNECT WITH SSLCOMMERZ API. Failed Reason: " . $sslcz['failedreason'];
-	                exit;
-	            }
-	            else
-	            {
-	            	return $sslcz;
-	            	exit;
-	            }
-			}
-			else
-			{
-				if ( is_wp_error( $response ) ) {
-					echo $response->get_error_message();
-				}
-				return "FAILED TO CONNECT WITH SSLCOMMERZ API. Error Code: ".$response['response']['code'];
-				exit;
-			}
+			$sslcz = json_decode($response['body'], true);
+			if ($sslcz['status'] == 'FAILED') {
+                return "FAILED TO CONNECT WITH SSLCOMMERZ API. Failed Reason: " . $sslcz['failedreason'];
+                exit;
+            }
+            else
+            {
+            	return $sslcz;
+            	exit;
+            }
 		}
-		else if(isset($this->quickpay_options['enable_popup']) && $this->quickpay_options['enable_popup'] != '' )
+		else
 		{
-			if($response['response']['code'] == 200)
-			{
-				$sslcz = json_decode($response['body'], true);
-				
-				if ($sslcz['status'] == 'FAILED') {
-		            echo "FAILED TO CONNECT WITH SSLCOMMERZ API";
-		            echo "<br/>Failed Reason: " . $sslcz['failedreason'];
-		            exit;
-		        }
-		        else
-		        {
-		        	if(isset($sslcz['GatewayPageURL']) && $sslcz['GatewayPageURL']!="") {
-						if($this->sandbox == "no")
-						{
-							echo json_encode(['status' => 'SUCCESS', 'data' => $sslcz['GatewayPageURL'], 'logo' => $sslcz['storeLogo'] ]);
-							exit;
-						}
-						else if($this->sandbox == "yes")
-						{
-							echo json_encode(['status' => 'success', 'data' => $sslcz['GatewayPageURL'], 'logo' => $sslcz['storeLogo'] ]);
-							exit;
-						}
-					} 
-					else {
-					   	echo json_encode(['status' => 'FAILED', 'data' => null, 'message' => $sslcz['failedreason'] ]);
-					}
-		        }
+			if ( is_wp_error( $response ) ) {
+				echo $response->get_error_message();
 			}
-			else
-			{
-				if ( is_wp_error( $response ) ) {
-					echo $response->get_error_message();
-				}
-				echo "Error Code: ".$response['response']['code'];
-				echo "FAILED TO CONNECT WITH SSLCOMMERZ API";
-				exit;
-			}                       
+			return "FAILED TO CONNECT WITH SSLCOMMERZ API. Error Code: ".$response['response']['code'];
+			exit;
 		}
 	}
 
