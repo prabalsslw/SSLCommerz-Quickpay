@@ -274,11 +274,13 @@
 		    	<label for="name">Currency <span class="sslcom-required">*</span> </label><br>
 		    	<select name="sslcom_currency" id="sslcom_currency" class="sslcom-text-field" required>
 		    		<option value="BDT" selected>BDT</option>
+		    		<option value="USD">USD</option>
 					<option value="EUR">EUR</option>
 					<option value="GBP">GBP</option>
 					<option value="AUD">AUD</option>
-					<option value="USD">USD</option>
 					<option value="CAD">CAD</option>
+					<option value="CNY">CNY</option>
+					<option value="INR">INR</option>
 		    	</select>
 		    </p>
 		</div>
@@ -300,7 +302,7 @@
 	    </p>
 	    <p>
 	    	<label for="checkbox">
-	    		<input type="checkbox" id="terms_cond" name="terms" required > By clicking Proceed, you agreed to our <a href="#" target="new">Terms &amp; Condition</a>, <a href="#" target="new">Privacy Policy</a> and <a href="#" target="new">Return Policy</a>
+	    		<input type="checkbox" id="terms_cond" name="terms" required > By clicking Proceed, you agreed to our <a href="<?php echo get_permalink($quickpay_options['terms_page']); ?>" target="new">Terms &amp; Condition</a>, <a href="<?php echo get_permalink($quickpay_options['privacy_page']); ?>" target="new">Privacy Policy</a> and <a href="<?php echo get_permalink($quickpay_options['privacy_page']); ?>" target="new">Return Policy</a>
 	    	</label>
 	    </p>
 	    <p>

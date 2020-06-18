@@ -49,8 +49,8 @@ class Quickpay_Admin_Settings
 	    <div class="wrap">
 	        <h2>SSLCommerz Quick Pay Settings</h2>
 	        <hr>
-	        <h4 style='color:green;'>Register for sandbox merchant panel & store credentials <a href='https://developer.sslcommerz.com/registration/' target='blank'>Click Here</a></h4>
-
+	        <h4 style='color:green;'>- Register for sandbox merchant panel & store credentials <a href='https://developer.sslcommerz.com/registration/' target='blank'>Click Here</a></h4>
+	        <h4 style='color:red;'>- Use this shortcode <b>[SSLCOMMERZ_QUICKPAY]</b> to integrate payment page.</h4>
 	        <hr>
 
 	        <?php settings_errors(); ?>
@@ -134,6 +134,22 @@ class Quickpay_Admin_Settings
 	        'return_page',
 	        __('Return Page', $sslcom_quickpay_slug),
 	        array( $this, 'sslcom_returnpage_callback'),
+	        'sslcom_quickpay',
+	        'gateway_settings_section'
+	    );
+
+	    add_settings_field(
+	        'terms_page',
+	        __('Terms and Conditions Page', $sslcom_quickpay_slug),
+	        array( $this, 'sslcom_terms_cond_callback'),
+	        'sslcom_quickpay',
+	        'gateway_settings_section'
+	    );
+
+	    add_settings_field(
+	        'privacy_page',
+	        __('Privacy & Policy Page', $sslcom_quickpay_slug),
+	        array( $this, 'sslcom_privacy_policy_callback'),
 	        'sslcom_quickpay',
 	        'gateway_settings_section'
 	    );
@@ -260,13 +276,18 @@ class Quickpay_Admin_Settings
 
 	    if( isset( $options['return_page'] ) && $options['return_page'] != '' ) {
 	        $return_page = $options['return_page'];
+	    	$selected_page = '<option selected value='.$return_page.'>'.get_the_title( $return_page ).'</option>';
+	    }
+	    else
+	    {
+	    	$selected_page = '';
 	    }
 
 	    $pages = get_pages();
 
 	    $html = '<select name="sslcom_quickpay[return_page]"><option value="">';
 	    $html .= esc_attr( __( 'Select page' ) ).'</option>';
-	    $html .= '<option selected value='.$return_page.'>'.get_the_title( $return_page ).'</option>';
+	    $html .= $selected_page;
 	    foreach ( $pages as $page ) {
 		    $html .= '<option value="' . $page->ID . '">';
 		    $html .= $page->post_title;
@@ -378,6 +399,58 @@ class Quickpay_Admin_Settings
 	    echo $html;
 	}
 
+	public function sslcom_terms_cond_callback() {
+	    $options = get_option( 'sslcom_quickpay' );
+	    if( isset( $options['terms_page'] ) && $options['terms_page'] != '' ) {
+	        $terms_page = $options['terms_page'];
+	        $selected_page = '<option selected value='.$terms_page.'>'.get_the_title( $terms_page ).'</option>';
+	    }
+	    else
+	    {
+	    	$selected_page = '';
+	    }
+
+	    $pages = get_pages();
+
+	    $html = '<select name="sslcom_quickpay[terms_page]"><option value="">';
+	    $html .= esc_attr( __( 'Select page' ) ).'</option>';
+	    $html .= $selected_page;
+	    foreach ( $pages as $page ) {
+		    $html .= '<option value="' . $page->ID . '">';
+		    $html .= $page->post_title;
+		    $html .= '</option>';
+		}
+		$html .= '</select> <label for="terms_page" style="color:green;"><b>Select page for Terms and Conditions.</b></label><br><br>';
+	    
+	    echo $html;
+	}
+
+	public function sslcom_privacy_policy_callback() {
+	    $options = get_option( 'sslcom_quickpay' );
+
+	    if( isset( $options['privacy_page'] ) && $options['privacy_page'] != '' ) {
+	        $privacy_page = $options['privacy_page'];
+	        $selected_page = '<option selected value='.$privacy_page.'>'.get_the_title( $privacy_page ).'</option>';
+	    }
+	    else
+	    {
+	    	$selected_page = '';
+	    }
+
+	    $pages = get_pages();
+
+	    $html = '<select name="sslcom_quickpay[privacy_page]"><option value="">';
+	    $html .= esc_attr( __( 'Select page' ) ).'</option>';
+	    $html .= $selected_page;
+	    foreach ( $pages as $page ) {
+		    $html .= '<option value="' . $page->ID . '">';
+		    $html .= $page->post_title;
+		    $html .= '</option>';
+		}
+		$html .= '</select> <label for="privacy_page" style="color:green;"><b>Select page for Privacy & Policy.</b></label><br><br>';
+	    
+	    echo $html;
+	}
 
 	# Sanitize & Validate data
 
@@ -431,6 +504,22 @@ class Quickpay_Admin_Settings
 	            $output['return_page'] =  $input['return_page'] ;
 	        } else {
 	            add_settings_error( 'sslcom_quickpay', 'plugin-error', esc_html__( 'Select Return Page', $sslcom_quickpay_slug));
+	        }
+	    }
+
+	    if ( isset( $input['terms_page'] ) ) {
+	        if (  $input['terms_page']  ) {
+	            $output['terms_page'] =  $input['terms_page'] ;
+	        } else {
+	            add_settings_error( 'sslcom_quickpay', 'plugin-error', esc_html__( 'Select Terms & Condition Page', $sslcom_quickpay_slug));
+	        }
+	    }
+
+	    if ( isset( $input['privacy_page'] ) ) {
+	        if (  $input['privacy_page']  ) {
+	            $output['privacy_page'] =  $input['privacy_page'] ;
+	        } else {
+	            add_settings_error( 'sslcom_quickpay', 'plugin-error', esc_html__( 'Select Privacy & Policy Page', $sslcom_quickpay_slug));
 	        }
 	    }
 
