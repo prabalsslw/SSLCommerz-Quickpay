@@ -2,10 +2,10 @@
 
 /**
 * Plugin Name: SSLCommerz Quick Pay - Donation/Registration/Membership/Payment
-* Plugin URI: http://prabal.com
+* Plugin URI: https://www.sslcommerz.com/
 * Description: This is the custome payment plugin for SSLCommerz. This plugin may used to Collect Donation, Registration Fees, Membership Fees or any other Custome payment.
-* Version: 1.0
-* Stable tag: 1.0
+* Version: 1.0.0
+* Stable tag: 1.0.0
 * Author: Prabal Mallick
 * Author URI: https://prabalsslw.wixsite.com/prabal
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -43,9 +43,11 @@
 
 	new Quickpay_Admin_Settings;
 
-	# Install Plugin
+	
+	/**
+	* Hook plugin activation
+	*/
 	register_activation_hook( __FILE__, 'sslcom_quickpay_active' );
-
 	function sslcom_quickpay_active() {
 		Quickpay_Init::sslcom_quickpay_install();
 
@@ -55,6 +57,15 @@
 		}
 		update_option( 'sslcommerz_quickpay_version', SSLCOMMERZ_QUICKPAY_VERSION );
 	}
+
+	/**
+	* Hook plugin deactivation
+	*/
+	register_deactivation_hook( __FILE__, 'sslcom_quickpay_deactivator' );
+	function sslcom_quickpay_deactivator() { 
+		flush_rewrite_rules();
+	}
+
 
 	if(isset($quickpay_options['enable_quickpay']) && !empty($quickpay_options['enable_quickpay']))
 	{
@@ -67,6 +78,24 @@
     	require_once( SSLCDPATH . 'lib/sslcom-quickpay.php' );
 	}
 	
+	function sslcom_quickpay_settings_link($links)
+	{
+	    $pluginLinks = array(
+            'settings' => '<a href="'. esc_url(admin_url( 'admin.php?page=quickpay-settings')) .'">Settings</a>',
+            'docs'     => '<a href="https://developer.sslcommerz.com/doc/v4/" target="blank">Docs</a>',
+            'sandbox'     => '<a href="https://developer.sslcommerz.com/registration/" target="blank">Create Sandbox</a>',
+            'support'  => '<a href="mailto:integration@sslcommerz.com">Support</a>'
+        );
+
+	    $links = array_merge($links, $pluginLinks);
+
+	    return $links;
+	}
+
+	add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'sslcom_quickpay_settings_link');
+
+
+
 	# Load Plugin CSS
 	function sslcommerz_quickpay_load_custom_style() {
         wp_register_style( 'sslcommerz_quickpay', SSLCDURL . 'include/css/style.css', false, SSLCOMMERZ_QUICKPAY_VERSION );
