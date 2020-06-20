@@ -76,7 +76,7 @@
                         ?>
                         <tr>
                             <td><?php echo ++$i; ?></td>
-                            <td><?php echo $row['trxid']; ?></td>
+                            <td style="color: blue;"><strong><?php echo $row['trxid']; ?></strong></td>
                             <td><?php echo $row['tran_date']; ?></td>
                             <?php if($row['tran_status'] == "Processing") { ?>
                             <td style="color: green;"><strong><?php echo $row['tran_status']; ?> (Success)</strong></td>
@@ -88,7 +88,7 @@
                             <td><strong><?php echo $row['cus_name']; ?></strong></td>
                             <td><?php echo $row['cus_email']; ?></td>
                             <td><?php echo $row['cus_phone']; ?></td>
-                            <td><?php echo $row['product_name']; ?></td>
+                            <td><strong><?php echo $row['product_name']; ?></strong></td>
                             <td><?php echo $row['cus_address']; ?></td>
                             <td><?php echo $row['extra_field1']; ?></td>
                             <td><?php echo $row['extra_field2']; ?></td>

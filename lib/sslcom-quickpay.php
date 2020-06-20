@@ -47,6 +47,24 @@
 	    			
 	    		}
             }
+            else if($results[0]['tran_status'] == 'Processing' && ($results[0]['total_amount'] == $validate_data->currency_amount))
+            {
+            	if ($validate_data->status == 'VALID' || $validate_data->status == 'VALIDATED') 
+	    		{
+    				$html = "<div class='sslcommerz-quickpay'>";
+    				$html .= "<h4>We have received your payment successfully.</h4><hr>";
+    				$html .= "<p><table class='table table-striped table-hover'>";
+    				$html .= "<tr><td class='text-right'><b>Transaction ID:</b> </td><td><b>$tran_id</b></td></tr>";
+    				$html .= "<tr><td class='text-right'><b>Name:</b> </td><td>$customer_name</td></tr>";
+    				$html .= "<tr><td class='text-right'><b>Service/Package/Product Name:</b> </td><td>$service_name</td></tr>";
+    				$html .= "<tr><td class='text-right'><b>Transaction Amount:</b> </td><td>$tran_amount</td></tr>";
+    				$html .= "<tr><td class='text-right'><b>Currency:</b> </td><td>$tran_currency</td></tr>";
+    				$html .= "<tr><td class='text-right'><b>Transaction Status:</b> </td><td>Processing</td></tr>";
+    				$html .= "</table></p>";
+    				$html .= "<div>";
+    				echo $html;
+	    		}
+            }
             else
             {
             	$html = "<div class='sslcommerz-quickpay'>";
@@ -86,6 +104,21 @@
 				echo $html;
 			}
         }
+        else if($results[0]['tran_status'] == 'Failed' && ($results[0]['total_amount'] == $currency_amount))
+        {
+        	$html = "<div class='sslcommerz-quickpay'>";
+			$html .= "<h4>Sadly, your payment failed!</h4><hr>";
+			$html .= "<p><table class='table table-striped table-hover'>";
+			$html .= "<tr><td class='text-right'><b>Transaction ID:</b> </td><td><b>$tran_id</b></td></tr>";
+			$html .= "<tr><td class='text-right'><b>Name:</b> </td><td>$customer_name</td></tr>";
+			$html .= "<tr><td class='text-right'><b>Service/Package/Product Name:</b> </td><td>$service_name</td></tr>";
+			$html .= "<tr><td class='text-right'><b>Transaction Amount:</b> </td><td>$tran_amount</td></tr>";
+			$html .= "<tr><td class='text-right'><b>Currency:</b> </td><td>$tran_currency</td></tr>";
+			$html .= "<tr><td class='text-right'><b>Transaction Status:</b> </td><td style='color:red;'>Failed</td></tr>";
+			$html .= "</table></p>";
+			$html .= "<div>";
+			echo $html;
+        }
         else
         {
         	$html = "<div class='sslcommerz-quickpay'>";
@@ -113,6 +146,17 @@
 				$html .= "<div>";
 				echo $html;
 			}
+        }
+        else if($results[0]['tran_status'] == 'Canceled')
+        {
+        	$html = "<div class='sslcommerz-quickpay'>";
+			$html .= "<h4>Your payment has been canceled!</h4><hr>";
+			$html .= "<p><table class='table table-striped table-hover'>";
+			$html .= "<tr><td class='text-right'><b>Transaction ID:</b> </td><td><b>$tran_id</b></td></tr>";
+			$html .= "<tr><td class='text-right'><b>Transaction Status:</b> </td><td>Canceled</td></tr>";
+			$html .= "</table></p>";
+			$html .= "<div>";
+			echo $html;
         }
         else
         {
@@ -175,6 +219,7 @@
 			$post_data['success_url'] = get_permalink($quickpay_options['return_page']);
 			$post_data['fail_url'] = get_permalink($quickpay_options['return_page']);
 			$post_data['cancel_url'] = get_permalink($quickpay_options['return_page']);
+			$post_data['ipn_url'] = get_site_url()."/sslcommerzQuickpay.php?sslcomipn";
 
 			$apiResponse = $Sslcommerz_Quickpay_Api->EasyHostedRequest($post_data);
 
