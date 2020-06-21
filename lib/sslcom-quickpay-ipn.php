@@ -26,9 +26,9 @@
         {
             if(isset($_POST['val_id']) || isset($_POST['tran_id']))
             {
-                $val_id = $_POST['val_id'];
-                $tran_id = $_POST['tran_id'];
-                $gw_data  = $Sslcommerz_Quickpay_Api->SslcomValidatePayment($val_id);
+                $val_id 	= sanitize_text_field($_POST['val_id']);
+                $tran_id 	= sanitize_text_field($_POST['tran_id']);
+                $gw_data  	= $Sslcommerz_Quickpay_Api->SslcomValidatePayment($val_id);
 
                 $card_type = $gw_data->card_type;
                 $currency_amount = $gw_data->currency_amount;
@@ -46,7 +46,7 @@
                             if($_POST['card_type'] != "")
                             {           
                                 $ipn = 'IPN Triggered: Success';           
-                                $wpdb->query( $wpdb->prepare("UPDATE $table_name SET tran_status = %s,card_type = %s, ipn_status = %s WHERE trxid = %s",'Processing', $card_type."(".$currency_type.")", $ipn, $_POST['tran_id']));
+                                $wpdb->query( $wpdb->prepare("UPDATE $table_name SET tran_status = %s,card_type = %s, ipn_status = %s WHERE trxid = %s",'Processing', $card_type."(".$currency_type.")", $ipn, $tran_id));
 
                                 $msg =  "Hash Validation Success.";
                             }
@@ -74,12 +74,12 @@
         elseif($_POST['status'] == 'FAILED')
         {
             $ipn = 'IPN Triggered: Failed';           
-            $wpdb->query( $wpdb->prepare("UPDATE $table_name SET tran_status = %s, ipn_status = %s WHERE trxid = %s",'Failed', $ipn, $_POST['tran_id']));
+            $wpdb->query( $wpdb->prepare("UPDATE $table_name SET tran_status = %s, ipn_status = %s WHERE trxid = %s",'Failed', $ipn, sanitize_text_field($_POST['tran_id'])));
         }
         elseif($_POST['status'] == 'CANCELLED')
         {
             $ipn = 'IPN Triggered: CANCELLED';           
-            $wpdb->query( $wpdb->prepare("UPDATE $table_name SET tran_status = %s, ipn_status = %s WHERE trxid = %s",'Cancelled', $ipn, $_POST['tran_id']));
+            $wpdb->query( $wpdb->prepare("UPDATE $table_name SET tran_status = %s, ipn_status = %s WHERE trxid = %s",'Cancelled', $ipn, sanitize_text_field($_POST['tran_id'])));
         }
     }
     else
